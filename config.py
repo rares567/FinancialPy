@@ -1,4 +1,4 @@
 API_KEY = 'PKWFIYEHDMORB00QD7S7'
 SECRET_KEY = 'oDc4BvBLUOZYedSWWOlTQQwH10c4sELdlclMP5hy'
 BASE_URL = 'https://paper-api.alpaca.markets'
-DB_FILE = '/home/rizea/proiecte/ProiectIA4/app.db'
+DB_FILE = '/home/rares/PycharmProjects/IA4-homework/app.db'
