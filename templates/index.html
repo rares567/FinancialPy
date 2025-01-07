@@ -1,144 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinancialPy</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #1b1c1d;
-            color: #ffffff;
-        }
-        h1, h2 {
-            color: #ffffff;
-        }
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-        }
-        .top-bar h1 {
-            display: flex;
-            align-items: center;
-            margin-left: -320px; /* Closer to the left margin */
-            margin-bottom: -100px;
-        }
-        .top-bar h1 .bitcoin-icon {
-            margin-right: 10px; /* Space between icon and text */
-            color: gold;
-        }
-        .top-bar div {
-            margin-right: -320px; /* Closer to the right margin */
-            margin-bottom: -100px;
-        }
-        .tradingview-widget-container {
-            margin: 10px 0; /* Reduced margin to move higher */
-        }
-        .ui.container {
-            margin-top: -30px; /* Move entire content higher */
-        }
-        .ui.fluid.icon.input {
-            margin-top: 10px; /* Adjust search bar spacing */
-        }
-        table {
-            margin-top: 10px; /* Move table higher */
-        }
-        table thead tr {
-            background-color: #333;
-        }
-    </style>
-</head>
-<body>
-    <div class="ui container">
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <h1>
-                <i class="fab fa-bitcoin bitcoin-icon"></i> FinancialPy
-            </h1>
-            <div>
-                <a href="/portfolio" class="ui teal button">Portfolio</a>
-            </div>
-        </div>
+{% extends "layout.html" %}
 
-        <!-- Chart Section -->
-        <h2>Stock Chart: Apple</h2>
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <div class="tradingview-widget-copyright">
-                <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
-                    <span class="blue-text">Track all markets on TradingView</span>
-                </a>
-            </div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-            {
-                "width": "100%",
-                "height": "600",
-                "symbol": "NASDAQ:AAPL",
-                "interval": "D",
-                "timezone": "Etc/UTC",
-                "theme": "dark",
-                "style": "1",
-                "locale": "en",
-                "allow_symbol_change": true,
-                "hide_side_toolbar": false
-            }
-            </script>
-        </div>
+{% block content %}
+<div class="ui container">
 
-        <!-- Search Bar -->
-        <div class="ui fluid icon input" style="background-color: #333; color: white; padding: 5px; border-radius: 5px;">
-            <input id="stock-search" type="text" placeholder="Search for stocks..." autocomplete="on" style="background-color: #222; color: white;">
-            <i class="search icon" style="color: white;"></i>
+    <!-- Main Chart Section -->
+    <h2>Stock Chart: Apple</h2>
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <div class="tradingview-widget-copyright">
+            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+                <span class="blue-text">Track all markets on TradingView</span>
+            </a>
         </div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+        {
+            "width": "100%",
+            "height": "600",
+            "symbol": "NASDAQ:AAPL",
+            "interval": "D",
+            "timezone": "Etc/UTC",
+            "theme": "dark",
+            "style": "1",
+            "locale": "en",
+            "allow_symbol_change": true,
+            "hide_side_toolbar": false
+        }
+        </script>
+    </div>
 
-        <!-- Stocks Table -->
-        <table class="ui selectable striped inverted celled table" id="stocks-table" style="font-size: 14px; background-color: #222; color: white;">
-            <thead>
-                <tr>
-                    <th>Symbol</th>
-                    <th>Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for stock in stocks %}
-                <tr>
-                    <td>{{ stock.symbol }}</td>
-                    <td>{{ stock.name }}</td>
-                    <td>
-                        <a href="/stock/{{ stock.symbol }}" class="ui blue button">View</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- Search Bar -->
+    <div class="ui fluid icon input" style="background-color: #333; color: white; padding: 5px; border-radius: 5px;">
+        <input id="stock-search" type="text" placeholder="Search for stocks..." autocomplete="on" style="background-color: #222; color: white;">
+        <i class="search icon" style="color: white;"></i>
+    </div>
+
+    <!-- Stocks Table -->
+    <table class="ui selectable striped inverted celled table" id="stocks-table" style="font-size: 14px; background-color: #222; color: white;">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+            <tr>
+                <td>{{ stock.symbol }}</td>
+                <td>{{ stock.name }}</td>
+                <td>
+                    <a href="/stock/{{ stock.symbol }}" class="ui blue button">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <script>
-        document.getElementById("stock-search").addEventListener("keyup", function(e) {
-            if (e.key !== 'Enter')
-                return;
-            const input = document.getElementById("stock-search");
-            const filter = input.value.toUpperCase();
-            const table = document.getElementById("stocks-table");
-            const rows = table.getElementsByTagName("tr");
+        const searchInput = document.getElementById('stock-search');
+        searchInput.addEventListener('keyup', function(event) {
+            const query = this.value.trim();
 
-            for (let i = 1; i < rows.length; i++) {
-                const cells = rows[i].getElementsByTagName("td");
-                let found = false;
-                for (let j = 0; j < cells.length; j++) {
-                    if (cells[j].innerText.toUpperCase().indexOf(filter) > -1) {
-                        found = true;
-                        break;
-                    }
-                }
-                rows[i].style.display = found ? "" : "none";
+            if (event.key === 'Enter') {
+                fetchResults(query);
             }
         });
+
+        function fetchResults(query) {
+            fetch(`/search?q=${encodeURIComponent(query)}`)
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const newRows = doc.querySelector('#stocks-table tbody').innerHTML;
+
+                    document.querySelector('#stocks-table tbody').innerHTML = newRows;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        // document.getElementById("stock-search").addEventListener("keyup", function(e) {
+        //     if (e.key !== 'Enter')
+        //         return;
+        //     const input = document.getElementById("stock-search");
+        //     const filter = input.value.toUpperCase();
+        //     const table = document.getElementById("stocks-table");
+        //     const rows = table.getElementsByTagName("tr");
+        //
+        //     for (let i = 1; i < rows.length; i++) {
+        //         const cells = rows[i].getElementsByTagName("td");
+        //         let found = false;
+        //         for (let j = 0; j < cells.length; j++) {
+        //             if (cells[j].innerText.toUpperCase().indexOf(filter) > -1) {
+        //                 found = true;
+        //                 break;
+        //             }
+        //         }
+        //         rows[i].style.display = found ? "" : "none";
+        //     }
+        // });
     </script>
     </div>
-</body>
-</html>
+{% endblock %}

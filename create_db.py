@@ -5,6 +5,21 @@ connection = sqlite3.connect(config.DB_FILE)
 cursor = connection.cursor()
 
 cursor.execute("""
+    CREATE TABLE IF NOT EXISTS virtual_balance (
+        balance REAL NOT NULL
+    )
+""")
+
+cursor.execute('SELECT COUNT(*) FROM virtual_balance')
+row_count = cursor.fetchone()[0]
+
+# insert value of balance only if table is empty
+if row_count == 0:
+    cursor.execute("""
+        INSERT INTO virtual_balance (balance) VALUES ('100000')
+    """)
+
+cursor.execute("""
     CREATE TABLE IF NOT EXISTS stock (
         id INTEGER PRIMARY KEY,
         symbol TEXT NOT NULL UNIQUE,

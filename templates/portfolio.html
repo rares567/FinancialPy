@@ -1,31 +1,74 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1>
-        <a href="/">Stocks </a>
-        <i class="angle double right icon"></i>
-<<<<<<<< HEAD:templates/portofolio.html
-        Portofolio
-========
-        Portfolio
->>>>>>>> 4e1352e6589ff5ff41c71f1105be048c85aa5185:templates/portfolio.html
-    </h1>
+    {% set is_portfolio_page = true %}
+    <style>
+        body {
+            background-color: #1b1c1d;
+            color: #ffffff;
+            height: initial;
+        }
+        h1, h2 {
+            color: #ffffff;
+        }
+        .ui.table {
+            background-color: #222;
+            color: #ffffff;
+        }
+        .ui.table thead th {
+            background-color: #333;
+        }
+        .ui.button {
+            margin: 0 5px;
+        }
+    </style>
+    <div class="ui container">
+        <h1>
+            <a href="/" style="color: cyan;">Stocks</a>
+            <i class="angle double right icon"></i>
+            Portfolio
+        </h1>
 
-    <h2>Stocks</h2>
-    <table class="ui striped table">
-        <thead>
-            <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for stock in stocks %}
-        <tr>
-            <td>{{ stock.symbol }}</td>
-            <td>{{ stock.name }}</td>
-        </tr>
+        <!-- Portfolio Section -->
+        <h2>Your Portfolio</h2>
+        <table class="ui striped inverted celled table">
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price Bought</th>
+                    <th>Current Price</th>
+                    <th>Relative Difference</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock, price in stocks_prices %}
+                <tr>
+                    <td>{{ stock.symbol }}</td>
+                    <td>{{ stock.name }}</td>
+                    <td>{{ stock.quantity }}</td>
+                    <td>{{ stock.bought_price }}</td>
+                    <td>{{ price.close }}</td>
+                    <td class="rel_diff"></td>
+                    <td>
+                        <a href="/stock/{{ stock.symbol }}" class="ui purple button">Go to {{ stock.symbol }}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        let curr_price, bought_price, percentage_diff, idx = 0;
+        {% for stock, price in stocks_prices %}
+            curr_price = parseFloat("{{ price.close }}");
+            bought_price = parseFloat("{{ stock.bought_price }}");
+            // calculate percentage difference and round it to 3 digits
+            percentage_diff = ((curr_price - bought_price) / bought_price * 100).toFixed(3);
+            document.getElementsByClassName("rel_diff")[idx].innerHTML = percentage_diff + "%";
+            idx++;
         {% endfor %}
-        </tbody>
-    </table>
+    </script>
 {% endblock %}

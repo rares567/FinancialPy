@@ -36,7 +36,7 @@ chunk_size = 200
 for i in range(0, len(symbols), chunk_size):
     symbol_chunk = symbols[i:i + chunk_size]
 
-    barsets = api.get_bars(symbol_chunk, TimeFrame.Day, "2024-12-15", "2025-01-03", adjustment='raw')
+    barsets = api.get_bars(symbol_chunk, TimeFrame.Day, "2024-12-15", "2025-01-06", adjustment='raw')
 
     for bar in barsets:
         symbol = bar.S
