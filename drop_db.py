@@ -4,10 +4,10 @@ connection = sqlite3.connect(config.DB_FILE)
 
 cursor = connection.cursor()
 
-cursor.execute("DROP TABLE stock_price")
+cursor.execute("DROP TABLE IF EXISTS stock_price")
 
-cursor.execute("DROP TABLE stock")
+cursor.execute("DROP TABLE IF EXISTS stock")
 
-cursor.execute("DROP TABLE portfolio")
+cursor.execute("DROP TABLE IF EXISTS portfolio")
 
 connection.commit()

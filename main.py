@@ -1,8 +1,5 @@
 import config, sqlite3
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import date
-
-from populate_stocks import cursor
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -19,24 +16,24 @@ def index():
 
     rows = cursor.fetchall()
 
-    return render_template("index.html", stocks=rows)
+    return render_template('index.html', stocks=rows, is_portfolio_page=False)
 
 @app.route("/search")
-def search(query:str):
+def search():
+    query = request.args.get("q", "")
     connection = sqlite3.connect(config.DB_FILE)
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
 
     cursor.execute("""
-            SELECT id, symbol, name
-            FROM stock
-            WHERE symbol LIKE ? OR name LIKE ?
-            ORDER BY symbol
-        """, (f"%{query}%", f"%{query}%"))
+        SELECT symbol, name FROM stock
+        WHERE symbol LIKE ? OR name LIKE ?
+        ORDER BY symbol
+    """, (f"%{query}%", f"%{query}%"))
 
     rows = cursor.fetchall()
 
-    return render_template("index.html", stocks=rows, query=query)
+    return render_template("index.html", stocks=rows)
 
 @app.route("/stock/<symbol>")
 def stock_detail(symbol):
@@ -109,7 +106,8 @@ def portfolio():
 
     stock_names = cursor.fetchall()
 
-    return render_template("portfolio.html", stock_names=stock_names, portfolio=portfolio)
+    return render_template("portfolio.html", stock_names=stock_names, is_portfolio_page=True, portfolio=portfolio)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
