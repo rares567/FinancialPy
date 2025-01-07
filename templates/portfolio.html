@@ -1,74 +1,74 @@
 {% extends "layout.html" %}
 
 {% block content %}
-{% set is_portfolio_page = true %}
-<style>
-    body {
-        background-color: #1b1c1d;
-        color: #ffffff;
-    }
-    h1, h2 {
-        color: #ffffff;
-    }
-    .ui.table {
-        background-color: #222;
-        color: #ffffff;
-    }
-    .ui.table thead th {
-        background-color: #333;
-    }
-    .ui.button {
-        margin: 0 5px;
-    }
-</style>
+    {% set is_portfolio_page = true %}
+    <style>
+        body {
+            background-color: #1b1c1d;
+            color: #ffffff;
+            height: initial;
+        }
+        h1, h2 {
+            color: #ffffff;
+        }
+        .ui.table {
+            background-color: #222;
+            color: #ffffff;
+        }
+        .ui.table thead th {
+            background-color: #333;
+        }
+        .ui.button {
+            margin: 0 5px;
+        }
+    </style>
+    <div class="ui container">
+        <h1>
+            <a href="/" style="color: cyan;">Stocks</a>
+            <i class="angle double right icon"></i>
+            Portfolio
+        </h1>
 
-<div class="ui container">
-    <h1>
-        <a href="/" style="color: cyan;">Stocks</a>
-        <i class="angle double right icon"></i>
-        Portfolio
-    </h1>
-
-    <!-- Portfolio Section -->
-    <h2>Your Portfolio</h2>
-    <table class="ui striped inverted celled table">
-        <thead>
-            <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Price Bought</th>
-                <th>Price Sold</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        <!-- Demo row -->
-        <tr>
-            <td>AAPL</td>
-            <td>Apple Inc.</td>
-            <td>10</td>
-            <td>$150</td>
-            <td>$160</td>
-            <td>
-                <a href="/buy/AAPL" class="ui green button">Buy</a>
-                <a href="/sell/AAPL" class="ui red button">Sell</a>
-            </td>
-        </tr>
-        {% for stock in portfolio %}
-        <tr>
-            <td>{{ stock.symbol }}</td>
-            <td>{{ stock.name }}</td>
-            <td>{{ stock.quantity }}</td>
-            <td>${{ stock.price_bought }}</td>
-            <td>${{ stock.price_sold }}</td>
-            <td>
-                <a href="/stock/{{ stock.symbol }}" class="ui green button">Buy</a>
-                <a href="/stock/{{ stock.symbol }}" class="ui red button">Sell</a>
-            </td>
-        </tr>
+        <!-- Portfolio Section -->
+        <h2>Your Portfolio</h2>
+        <table class="ui striped inverted celled table">
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price Bought</th>
+                    <th>Current Price</th>
+                    <th>Relative Difference</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock, price in stocks_prices %}
+                <tr>
+                    <td>{{ stock.symbol }}</td>
+                    <td>{{ stock.name }}</td>
+                    <td>{{ stock.quantity }}</td>
+                    <td>{{ stock.bought_price }}</td>
+                    <td>{{ price.close }}</td>
+                    <td class="rel_diff"></td>
+                    <td>
+                        <a href="/stock/{{ stock.symbol }}" class="ui purple button">Go to {{ stock.symbol }}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        let curr_price, bought_price, percentage_diff, idx = 0;
+        {% for stock, price in stocks_prices %}
+            curr_price = parseFloat("{{ price.close }}");
+            bought_price = parseFloat("{{ stock.bought_price }}");
+            // calculate percentage difference and round it to 3 digits
+            percentage_diff = ((curr_price - bought_price) / bought_price * 100).toFixed(3);
+            document.getElementsByClassName("rel_diff")[idx].innerHTML = percentage_diff + "%";
+            idx++;
         {% endfor %}
-        </tbody>
-    </table>
-</div>
+    </script>
 {% endblock %}

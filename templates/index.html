@@ -57,28 +57,47 @@
     </table>
 
     <script>
-    const searchInput = document.getElementById('stock-search');
-    searchInput.addEventListener('keyup', function(event) {
-        const query = this.value.trim();
+        const searchInput = document.getElementById('stock-search');
+        searchInput.addEventListener('keyup', function(event) {
+            const query = this.value.trim();
 
-        if (event.key === 'Enter') {
-            fetchResults(query);
+            if (event.key === 'Enter') {
+                fetchResults(query);
+            }
+        });
+
+        function fetchResults(query) {
+            fetch(`/search?q=${encodeURIComponent(query)}`)
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const newRows = doc.querySelector('#stocks-table tbody').innerHTML;
+
+                    document.querySelector('#stocks-table tbody').innerHTML = newRows;
+                })
+                .catch(error => console.error('Error:', error));
         }
-    });
-
-    function fetchResults(query) {
-        fetch(`/search?q=${encodeURIComponent(query)}`)
-            .then(response => response.text())
-            .then(data => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data, 'text/html');
-                const newRows = doc.querySelector('#stocks-table tbody').innerHTML;
-
-                document.querySelector('#stocks-table tbody').innerHTML = newRows;
-            })
-            .catch(error => console.error('Error:', error));
-    }
-</script>
-
-</div>
+        // document.getElementById("stock-search").addEventListener("keyup", function(e) {
+        //     if (e.key !== 'Enter')
+        //         return;
+        //     const input = document.getElementById("stock-search");
+        //     const filter = input.value.toUpperCase();
+        //     const table = document.getElementById("stocks-table");
+        //     const rows = table.getElementsByTagName("tr");
+        //
+        //     for (let i = 1; i < rows.length; i++) {
+        //         const cells = rows[i].getElementsByTagName("td");
+        //         let found = false;
+        //         for (let j = 0; j < cells.length; j++) {
+        //             if (cells[j].innerText.toUpperCase().indexOf(filter) > -1) {
+        //                 found = true;
+        //                 break;
+        //             }
+        //         }
+        //         rows[i].style.display = found ? "" : "none";
+        //     }
+        // });
+    </script>
+    </div>
 {% endblock %}

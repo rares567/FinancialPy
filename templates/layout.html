@@ -11,8 +11,6 @@
         body {
             background-color: #1b1c1d;
             color: #ffffff;
-            margin: 0;
-            padding: 0;
         }
         .top-bar {
             position: fixed;
@@ -52,7 +50,7 @@
         </h1>
         <div style="display: flex; align-items: center; gap: 10px;">
             <div class="ui label" style="background-color: white; color: black; font-size: 16px; padding: 10px;">
-                Balance: $100000
+                Virtual Balance: ${{ balance }}
             </div>
             {% if not is_portfolio_page %}
                 <a href="/portfolio" class="ui teal button">Portfolio</a>

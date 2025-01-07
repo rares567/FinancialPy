@@ -113,9 +113,22 @@
     </table>
 
     <script>
+        // have jinja give closing price of last data point (soonest data point)
         let stock_price = {{ last_bar.close }};
         document.getElementById("quantity").addEventListener("input", function() {
-            document.getElementById("price").value = parseFloat((document.getElementById("quantity").value * stock_price).toFixed(3));
+            // modify price field by calculating price (and round it to 3 digits)
+            let quantity = document.getElementById("quantity").value;
+            // if a valid quantity was inputted, calculate price
+            if (quantity >= 1)
+                document.getElementById("price").value = parseFloat((quantity * stock_price).toFixed(3));
         });
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              alert("{{ message }}");
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
     </script>
 {% endblock %}
