@@ -68,7 +68,18 @@ def stock_detail(symbol):
     # round shown balance to 2 digits
     balance = round(cursor.fetchone()["balance"], 2)
 
-    return render_template("stock_detail.html", stock=row, bars=prices, last_bar=prices[-1], balance=balance)
+    cursor.execute("""
+            SELECT quantity FROM portfolio WHERE stock_id = ?
+        """, (row["id"],))
+
+    # get stock quantity for selling stock (cannot sell more than is owned)
+    stocks = cursor.fetchall()
+    stock_quantity = 0
+    for stock in stocks:
+        stock_quantity += stock["quantity"]
+
+    return render_template("stock_detail.html", stock=row, bars=prices,
+                           last_bar=prices[-1], balance=balance, stock_quantity=stock_quantity)
 
 @app.route("/buy_stock/<symbol>", methods=['POST'])
 def buy_stock(symbol):
@@ -77,7 +88,7 @@ def buy_stock(symbol):
     cursor = connection.cursor()
 
     cursor.execute("""
-        SELECT id, symbol, name FROM stock WHERE symbol = ?
+        SELECT id FROM stock WHERE symbol = ?
     """, (symbol,))
 
     row = cursor.fetchone()
@@ -91,7 +102,7 @@ def buy_stock(symbol):
 
     row = cursor.fetchone()
     stock_price = row["close"]
-    quantity = int(request.form['quantity'])
+    quantity = int(request.form['buy-quantity'])
     # cost of buying the chosen stocks
     cost = stock_price * quantity
 
@@ -113,6 +124,61 @@ def buy_stock(symbol):
     cursor.execute("""
         INSERT INTO portfolio (stock_id, quantity, bought_price) VALUES (?, ?, ?)
     """, (stock_id, quantity, stock_price))
+
+    connection.commit()
+
+    return redirect(url_for("portfolio"))
+
+@app.route("/sell_stock/<symbol>", methods=['POST'])
+def sell_stock(symbol):
+    connection = sqlite3.connect(config.DB_FILE)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT id FROM stock WHERE symbol = ?
+    """, (symbol,))
+
+    row = cursor.fetchone()
+    stock_id = row["id"]
+
+    cursor.execute("""
+        SELECT id, quantity FROM portfolio WHERE stock_id = ?
+    """, (stock_id,))
+
+    # remove the sold stocks from portfolio
+    stocks = cursor.fetchall()
+    sold_quantity = int(request.form['sell-quantity'])
+    for stock in stocks:
+        if stock["quantity"] <= sold_quantity:
+            # stock["id"] in this context is the row id of portfolio!!!
+            cursor.execute("""
+                DELETE FROM portfolio WHERE id = ?
+            """, (stock["id"],))
+            sold_quantity -= stock["quantity"]
+        elif sold_quantity > 0:
+            cursor.execute("""
+                UPDATE portfolio SET quantity = quantity - ? WHERE id = ?
+            """, (sold_quantity, stock["id"]))
+            sold_quantity = 0
+        else:
+            break
+
+    cursor.execute("""
+        SELECT * FROM stock_price
+        WHERE stock_id = ?
+        ORDER BY date DESC
+    """, (stock_id,))
+
+    row = cursor.fetchone()
+    stock_price = row["close"]
+    quantity = int(request.form['sell-quantity'])
+    # calculate money gained and add it to virtual balance
+    value = stock_price * quantity
+
+    cursor.execute("""
+        UPDATE virtual_balance SET balance = balance + ?
+    """, (value,))
 
     connection.commit()
 
@@ -148,14 +214,16 @@ def portfolio():
 
     # use left join to keep duplicates of stocks in the order that they appear in the table!!!!!
     cursor.execute("""
-        SELECT stock_price.close, stock_price.date
+        SELECT stock_price.close
         FROM portfolio LEFT JOIN stock_price on stock_price.stock_id = portfolio.stock_id
         ORDER BY date DESC
     """)
 
     recent_prices = cursor.fetchall()
+    # create a list of the 2 lists in parallel for easier iteration (take only required number of prices)
+    stocks_prices = list(zip(rows, recent_prices[:count]))
 
-    return render_template("portfolio.html", stocks_prices=list(zip(rows, recent_prices[:count])), balance=balance, is_portfolio_page=True)
+    return render_template("portfolio.html", stocks_prices=stocks_prices, balance=balance, is_portfolio_page=True)
 
 if __name__ == "__main__":
     app.run(debug=True)

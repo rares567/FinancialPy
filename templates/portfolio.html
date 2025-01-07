@@ -31,6 +31,8 @@
 
         <!-- Portfolio Section -->
         <h2>Your Portfolio</h2>
+        <h2 id="total_invested"></h2>
+        <h2 id="total_worth"></h2>
         <table class="ui striped inverted celled table">
             <thead>
                 <tr>
@@ -49,8 +51,8 @@
                     <td>{{ stock.symbol }}</td>
                     <td>{{ stock.name }}</td>
                     <td>{{ stock.quantity }}</td>
-                    <td>{{ stock.bought_price }}</td>
-                    <td>{{ price.close }}</td>
+                    <td class="price_bought">{{ stock.bought_price }}</td>
+                    <td class="curr_price">{{ price.close }}</td>
                     <td class="rel_diff"></td>
                     <td>
                         <a href="/stock/{{ stock.symbol }}" class="ui purple button">Go to {{ stock.symbol }}</a>
@@ -61,14 +63,21 @@
         </table>
     </div>
     <script>
-        let curr_price, bought_price, percentage_diff, idx = 0;
+        let curr_price, bought_price, percentage_diff, quantity, idx = 0, stocks_worth = 0;
         {% for stock, price in stocks_prices %}
-            curr_price = parseFloat("{{ price.close }}");
             bought_price = parseFloat("{{ stock.bought_price }}");
+            curr_price = parseFloat("{{ price.close }}");
+            quantity = parseInt("{{ stock.quantity }}");
             // calculate percentage difference and round it to 3 digits
             percentage_diff = ((curr_price - bought_price) / bought_price * 100).toFixed(3);
+            // round total price to 2 digits
+            document.getElementsByClassName("price_bought")[idx].innerHTML = (bought_price * quantity).toFixed(2);
+            document.getElementsByClassName("curr_price")[idx].innerHTML = (curr_price * quantity).toFixed(2);
             document.getElementsByClassName("rel_diff")[idx].innerHTML = percentage_diff + "%";
+            stocks_worth += curr_price * quantity;
             idx++;
         {% endfor %}
+        document.getElementById("total_invested").innerHTML = "Total Invested Value: " + stocks_worth;
+        document.getElementById("total_worth").innerHTML = "Total Portfolio Value: " + (stocks_worth + {{ balance }});
     </script>
 {% endblock %}
