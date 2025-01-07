@@ -91,7 +91,7 @@
 
         <!-- Search Bar -->
         <div class="ui fluid icon input" style="background-color: #333; color: white; padding: 5px; border-radius: 5px;">
-            <input id="stock-search" type="text" placeholder="Search for stocks..." onkeyup="filterStocks()" autocomplete="on" style="background-color: #222; color: white;">
+            <input id="stock-search" type="text" placeholder="Search for stocks..." autocomplete="on" style="background-color: #222; color: white;">
             <i class="search icon" style="color: white;"></i>
         </div>
 
@@ -118,7 +118,9 @@
         </table>
 
     <script>
-        function filterStocks() {
+        document.getElementById("stock-search").addEventListener("keyup", function(e) {
+            if (e.key !== 'Enter')
+                return;
             const input = document.getElementById("stock-search");
             const filter = input.value.toUpperCase();
             const table = document.getElementById("stocks-table");
@@ -135,7 +137,7 @@
                 }
                 rows[i].style.display = found ? "" : "none";
             }
-        }
+        });
     </script>
     </div>
 </body>

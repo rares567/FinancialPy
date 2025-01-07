@@ -1,8 +1,5 @@
 import config, sqlite3
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import date
-
-from populate_stocks import cursor
 
 app = Flask(__name__)
 app.secret_key = "secret"

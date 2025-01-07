@@ -33,7 +33,7 @@ for row in rows:
 api = tradeapi.REST(config.API_KEY, config.SECRET_KEY, base_url=config.BASE_URL)
 
 chunk_size = 200
-for i in range(0, 11200, chunk_size): # range(0, len(symbols), chunk_size)
+for i in range(0, len(symbols), chunk_size):
     symbol_chunk = symbols[i:i + chunk_size]
 
     barsets = api.get_bars(symbol_chunk, TimeFrame.Day, "2024-12-15", "2025-01-03", adjustment='raw')
