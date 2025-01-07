@@ -21,6 +21,23 @@ def index():
 
     return render_template("index.html", stocks=rows)
 
+@app.route("/search")
+def search(query:str):
+    connection = sqlite3.connect(config.DB_FILE)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+
+    cursor.execute("""
+            SELECT id, symbol, name
+            FROM stock
+            WHERE symbol LIKE ? OR name LIKE ?
+            ORDER BY symbol
+        """, (f"%{query}%", f"%{query}%"))
+
+    rows = cursor.fetchall()
+
+    return render_template("index.html", stocks=rows, query=query)
+
 @app.route("/stock/<symbol>")
 def stock_detail(symbol):
     connection = sqlite3.connect(config.DB_FILE)
@@ -65,34 +82,34 @@ def buy_stock(symbol):
     quantity = int(request.form['quantity'])
 
     cursor.execute("""
-        INSERT INTO portofolio (stock_id, quantity, bought_price) VALUES (?, ?, ?)
+        INSERT INTO portfolio (stock_id, quantity, bought_price) VALUES (?, ?, ?)
     """, (stock_id, quantity, stock_price))
 
     connection.commit()
 
-    return redirect(url_for("portofolio"))
+    return redirect(url_for("portfolio"))
 
-@app.route("/portofolio")
-def portofolio():
+@app.route("/portfolio")
+def portfolio():
     connection = sqlite3.connect(config.DB_FILE)
     connection.row_factory = sqlite3.Row
 
     cursor = connection.cursor()
 
     cursor.execute("""
-        SELECT quantity, bought_price FROM portofolio
+        SELECT quantity, bought_price FROM portfolio
     """)
 
-    portofolio = cursor.fetchall()
+    portfolio = cursor.fetchall()
 
     cursor.execute("""
         SELECT symbol, name
-        FROM stock JOIN portofolio on portofolio.stock_id = stock.id
+        FROM stock JOIN portfolio on portfolio.stock_id = stock.id
     """)
 
     stock_names = cursor.fetchall()
 
-    return render_template("portofolio.html", stock_names=stock_names, portofolio=portofolio)
+    return render_template("portfolio.html", stock_names=stock_names, portfolio=portfolio)
 
 if __name__ == "__main__":
     app.run(debug=True)

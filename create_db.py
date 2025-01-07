@@ -28,7 +28,7 @@ cursor.execute("""
 """)
 
 cursor.execute("""
-    CREATE TABLE IF NOT EXISTS portofolio (
+    CREATE TABLE IF NOT EXISTS portfolio (
         id INTEGER PRIMARY KEY,
         stock_id INTEGER NOT NULL,
         quantity INTEGER NOT NULL,

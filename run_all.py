@@ -1,6 +1,6 @@
 import subprocess
 
-python_path = "./.venv/bin/python"
+python_path = "./venv/Scripts/python.exe"
 
 print("Deleting old database...")
 subprocess.run([python_path, "drop_db.py"])

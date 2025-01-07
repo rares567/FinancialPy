@@ -8,6 +8,6 @@ cursor.execute("DROP TABLE stock_price")
 
 cursor.execute("DROP TABLE stock")
 
-cursor.execute("DROP TABLE portofolio")
+cursor.execute("DROP TABLE portfolio")
 
 connection.commit()
