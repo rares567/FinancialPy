@@ -29,15 +29,12 @@
 </div>
 <!-- TradingView Widget END -->
 
-<form method="post" action="/apply_strategy">
-    <select name="strategy_id">
-        {% for strategy in strategies %}
-            <option value="{{ strategy.id }}">{{ strategy.name }}</option>
-        {% endfor %}
-    </select>
-
-    <input type="text" name="stock_id" value="{{ stock.id }}">
-    <input type="submit" value="Apply Strategy" />
+<form action="/buy_stock/{{ stock.symbol }}" method="POST">
+    <label for="quantity">Enter stock quantity:</label>
+    <input type="number" id="quantity" name="quantity" value="" min="1" required><br>
+    <label for="price">Price to buy:</label>
+    <input type="text" id="price" name="price" value="" disabled><br>
+    <input type="submit" value="Buy Stock">
 </form>
 
 <h2>Prices</h2>
@@ -64,7 +61,16 @@
        </tr>
 
        {% endfor %}
-       </tbody>>
-    </table>>
+       </tbody>
+    </table>
+
+<script>
+    // have jinja give closing price of last data point (soonest data point)
+    let stock_price = {{ last_bar.close }};
+    document.getElementById("quantity").addEventListener("input", function() {
+        // modify price field by calculating price (and round it to 3 digits)
+        document.getElementById("price").value = parseFloat((document.getElementById("quantity").value * stock_price).toFixed(3));
+    });
+</script>
 
 {% endblock %}
