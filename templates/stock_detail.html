@@ -4,27 +4,48 @@
 
 {% block content %}
 <style>
-    .buy-stock-form {
+    .main-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2%;
+        width: 100%;
+    }
+
+    .form-container {
+        width: 49%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .buy-stock-form, .sell-stock-form {
         width: 100%;
         background-color: #222;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        margin-top: 20px;
+        min-height: 266px;
     }
-    .buy-stock-form label, .buy-stock-form input {
+
+    .buy-stock-form label, .buy-stock-form input,
+    .sell-stock-form label, .sell-stock-form input {
         display: block;
         margin-bottom: 10px;
         color: white;
     }
-    .buy-stock-form input[type="number"], .buy-stock-form input[type="text"] {
+
+    .buy-stock-form input[type="number"], .buy-stock-form input[type="text"],
+    .sell-stock-form input[type="number"], .sell-stock-form input[type="text"] {
         width: 100%;
         padding: 10px;
         border: none;
         background-color: #333;
         color: white;
         border-radius: 5px;
+
     }
+
     .buy-stock-form input[type="submit"] {
         background-color: #21ba45;
         color: white;
@@ -34,11 +55,50 @@
         font-size: 16px;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        margin-top: 30px;
     }
+
+    .sell-stock-form input[type="submit"] {
+        background-color: red;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 30px;
+    }
+
     .buy-stock-form input[type="submit"]:hover {
         background-color: #16ab39;
     }
+
+    .sell-stock-form input[type="submit"]:hover {
+        background-color: darkred;
+    }
+
+    .ai-advice-box {
+        width: 49%; /* Matches the form-container's width */
+        background-color: #444;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        min-height: 300px; /* Ensures consistent height with forms */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    .ai-advice-box img {
+        width: 80%;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
 </style>
+
 
 <h1>
     <a href="/" style="color: cyan;">Stocks</a>
@@ -70,19 +130,34 @@
     </script>
 </div>
 
-<!-- Buy Stock Form -->
-<div class="buy-stock-form">
-    <h2 style="color: white;">Buy Stock</h2>
-    <form action="/buy_stock/{{ stock.symbol }}" method="POST">
-        <label for="quantity">Enter Stock Quantity:</label>
-        <input type="number" id="quantity" name="quantity" min="1" required>
-
-        <label for="price">Total Price:</label>
-        <input type="text" id="price" name="price" disabled>
-
-        <input type="submit" value="Buy Stock">
-    </form>
+<div class="main-container">
+    <div class="form-container">
+        <div class="buy-stock-form">
+            <!-- Buy Stock Form -->
+            <label for="buy-quantity">Enter Stock Quantity:</label>
+            <input type="number" id="buy-quantity">
+            <label for="buy-total">Total Price:</label>
+            <input type="text" id="buy-total" readonly>
+            <input type="submit" value="Buy Stock">
+        </div>
+        <div class="sell-stock-form">
+            <!-- Sell Stock Form -->
+            <label for="sell-quantity">Enter Stock Quantity:</label>
+            <input type="number" id="sell-quantity">
+            <label for="sell-total">Total Price:</label>
+            <input type="text" id="sell-total" readonly>
+            <input type="submit" value="Sell Stock">
+        </div>
+    </div>
+    <div class="ai-advice-box">
+        <!-- AI Advice Box -->
+        <img src="https://via.placeholder.com/300" alt="AI Advice">
+        <h3>Bitcoin AI Bot</h3>
+        <p>Get insights and advice on what to do with this stock.</p>
+    </div>
 </div>
+
+
 
 
 <!-- Stock Data Table -->
