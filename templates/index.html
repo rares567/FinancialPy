@@ -56,6 +56,27 @@
         </tbody>
     </table>
 
+    <!-- Add CSS for stock table -->
+    <style>
+        #stocks-table {
+            font-size: 14px;
+            background-color: #222;
+            color: white;
+        }
+
+        #stocks-table th,
+        #stocks-table td {
+            text-align: left;
+            padding: 10px;
+        }
+
+        #stocks-table td:last-child {
+            width: 1%;
+            text-align: right;
+        }
+
+    </style>
+
     <script>
         const searchInput = document.getElementById('stock-search');
         searchInput.addEventListener('keyup', function(event) {

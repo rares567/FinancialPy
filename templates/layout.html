@@ -30,9 +30,10 @@
             align-items: center;
             margin: 0;
         }
-        .top-bar h1 .bitcoin-icon {
-            margin-right: 10px;
-            color: gold;
+        .top-bar h1 .pi-icon {
+            color: cyan;
+            font-family: 'Arial', sans-serif;
+            font-size: 1.25em;
         }
         .top-bar a {
             margin: 0;
@@ -41,13 +42,19 @@
             margin-top: 80px;
             margin-bottom: 100px;
         }
+        .financialpy-link, .financialpy-link:hover{
+            color: white;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
         <h1>
-            <i class="fab fa-bitcoin bitcoin-icon"></i> FinancialPy
+            <a href="/" class="financialpy-link">
+                <span class="pi-icon">π</span> FinancialPy
+            </a>
         </h1>
         <div style="display: flex; align-items: center; gap: 10px;">
             <div class="ui label" style="background-color: white; color: black; font-size: 16px; padding: 10px;">
