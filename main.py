@@ -1,6 +1,8 @@
 import config, sqlite3
 from flask import Flask, render_template, request, redirect, url_for, flash
 
+from trading_bot import buy_or_sell, predict_price_trend
+
 app = Flask(__name__)
 app.secret_key = "secret"
 
@@ -78,8 +80,11 @@ def stock_detail(symbol):
     for stock in stocks:
         stock_quantity += stock["quantity"]
 
+    price_trend = predict_price_trend(symbol);
+
     return render_template("stock_detail.html", stock=row, bars=prices,
-                           last_bar=prices[-1], balance=balance, stock_quantity=stock_quantity)
+                           last_bar=prices[-1], balance=balance, stock_quantity=stock_quantity,
+                           action=buy_or_sell(symbol), trend=price_trend['trend'], patterns=price_trend['patterns'])
 
 @app.route("/buy_stock/<symbol>", methods=['POST'])
 def buy_stock(symbol):
