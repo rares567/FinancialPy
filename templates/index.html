@@ -28,13 +28,12 @@
         </script>
     </div>
 
-    <!-- Search Bar -->
-    <div class="ui fluid icon input" style="background-color: #333; color: white; padding: 5px; border-radius: 5px;">
-        <input id="stock-search" type="text" placeholder="Search for stocks..." autocomplete="on" style="background-color: #222; color: white;">
+    <form action="/search" method="POST" class="ui fluid icon input" style="background-color: #333; color: white; padding: 5px; border-radius: 5px;">
+        <input id="stock-search" type="text" name="stock-search" placeholder="Search for stocks..." style="background-color: #222; color: white;">
         <i class="search icon" style="color: white;"></i>
-    </div>
-
-    <!-- Stocks Table -->
+        <!-- activated only through hitting Enter -->
+        <input type="submit" style="display: none;">
+    </form>
     <table class="ui selectable striped inverted celled table" id="stocks-table" style="font-size: 14px; background-color: #222; color: white;">
         <thead>
             <tr>
@@ -55,8 +54,6 @@
             {% endfor %}
         </tbody>
     </table>
-
-    <!-- Add CSS for stock table -->
     <style>
         #stocks-table {
             font-size: 14px;
@@ -76,30 +73,5 @@
         }
 
     </style>
-
-    <script>
-        const searchInput = document.getElementById('stock-search');
-        searchInput.addEventListener('keyup', function(event) {
-            const query = this.value.trim();
-
-            if (event.key === 'Enter') {
-                fetchResults(query);
-            }
-        });
-
-        function fetchResults(query) {
-            fetch(`/search?q=${encodeURIComponent(query)}`)
-                .then(response => response.text())
-                .then(data => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
-                    const newRows = doc.querySelector('#stocks-table tbody').innerHTML;
-
-                    document.querySelector('#stocks-table tbody').innerHTML = newRows;
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-    </script>
     </div>
 {% endblock %}

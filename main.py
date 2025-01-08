@@ -25,25 +25,32 @@ def index():
     # round shown balance to 2 digits
     balance = round(cursor.fetchone()["balance"], 2)
 
-    return render_template("index.html", stocks=rows, is_portfolio_page=False, balance=balance)
+    return render_template("index.html", stocks=rows, balance=balance)
 
-@app.route("/search")
+@app.route("/search", methods=["POST"])
 def search():
     connection = sqlite3.connect(config.DB_FILE)
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
 
-    query = request.args.get("q", "")
+    search = request.form["stock-search"]
     cursor.execute("""
             SELECT id, symbol, name
             FROM stock
             WHERE symbol LIKE ? OR name LIKE ?
             ORDER BY symbol
-        """, (f"%{query}%", f"%{query}%"))
+        """, (f"%{search}%", f"%{search}%"))
 
     rows = cursor.fetchall()
 
-    return render_template("index.html", stocks=rows)
+    cursor.execute("""
+                SELECT balance FROM virtual_balance
+            """)
+
+    # round shown balance to 2 digits
+    balance = round(cursor.fetchone()["balance"], 2)
+
+    return render_template("index.html", stocks=rows, balance=balance)
 
 @app.route("/stock/<symbol>")
 def stock_detail(symbol):
@@ -228,7 +235,7 @@ def portfolio():
     # create a list of the 2 lists in parallel for easier iteration (take only required number of prices)
     stocks_prices = list(zip(rows, recent_prices[:count]))
 
-    return render_template("portfolio.html", stocks_prices=stocks_prices, balance=balance, is_portfolio_page=True)
+    return render_template("portfolio.html", stocks_prices=stocks_prices, balance=balance)
 
 if __name__ == "__main__":
     app.run(debug=True)

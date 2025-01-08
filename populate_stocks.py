@@ -17,10 +17,7 @@ api = tradeapi.REST(config.API_KEY, config.SECRET_KEY, base_url=config.BASE_URL)
 assets = api.list_assets()
 
 for asset in assets:
-    try:
-        if asset.status == 'active' and asset.tradable and asset.symbol not in symbols and "/" not in asset.symbol and "." not in asset.symbol:
-            cursor.execute("INSERT INTO stock (symbol, name, exchange) VALUES (?, ?, ?)", (asset.symbol, asset.name, asset.exchange))
-    except Exception as e:
-        print(e)
+    if asset.status == 'active' and asset.tradable and asset.symbol not in symbols and "/" not in asset.symbol and "." not in asset.symbol:
+        cursor.execute("INSERT OR IGNORE INTO stock (symbol, name, exchange) VALUES (?, ?, ?)", (asset.symbol, asset.name, asset.exchange))
 connection.commit()
 connection.close()

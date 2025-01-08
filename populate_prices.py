@@ -32,7 +32,7 @@ for row in rows:
 
 api = tradeapi.REST(config.API_KEY, config.SECRET_KEY, base_url=config.BASE_URL)
 
-chunk_size = 200
+chunk_size = 500
 for i in range(0, len(symbols), chunk_size):
     symbol_chunk = symbols[i:i + chunk_size]
 
@@ -40,7 +40,6 @@ for i in range(0, len(symbols), chunk_size):
 
     for bar in barsets:
         symbol = bar.S
-        # print(f"Processing symbol {symbol}")
 
         stock_id = stock_dict[symbol]["id"]
         stock_name = stock_dict[symbol]["name"]
