@@ -182,7 +182,3 @@ def buy_or_sell(symbol):
             return "Buy!"
         else:
             return "Unpredictable Market!"
-
-
-print(buy_or_sell("AIMDW"))
-print(predict_price_trend("AIMDW"))
