@@ -93,8 +93,8 @@
     }
 
     .ai-advice-box img {
-        width: 80%;
-        border-radius: 10px;
+        width: 100%;
+        border-radius: 20px;
         margin-bottom: 20px;
     }
 </style>
@@ -132,6 +132,7 @@
 
 <div class="main-container">
     <div class="form-container">
+        <!-- Buy Form -->
         <form action="/buy_stock/{{ stock.symbol }}" method="POST" class="buy-stock-form">
             <label for="buy-quantity">Enter Stock Quantity:</label>
             <input type="number" id="buy-quantity" name="buy-quantity" min="1" required>
@@ -139,6 +140,7 @@
             <input type="text" id="buy-price" name="buy-price" disabled>
             <input type="submit" value="Buy Stock">
         </form>
+        <!-- Sell Form -->
         <form action="/sell_stock/{{ stock.symbol }}" method="POST" class="sell-stock-form">
             <label for="sell-quantity">Enter Stock Quantity:</label>
             <input type="number" id="sell-quantity" name="sell-quantity" min="1" max="{{ stock_quantity }}" required>
@@ -147,11 +149,62 @@
             <input type="submit" value="Sell Stock">
         </form>
     </div>
+
+
+    <!-- Trading Bot -->
     <div class="ai-advice-box">
-        <img src="https://via.placeholder.com/300" alt="AI Advice">
-        <h3>Bitcoin AI Bot</h3>
-        <p>Get insights and advice on what to do with this stock.</p>
+        <img src="{{ url_for('static', filename='/Image/bot.png')}}" style="width: 250px; height: 250px;">
+        <h3>FinancialPY Help Bot</h3>
+        <div class="advice-list">
+            <p>Buy or Sell:<br>{{ action }} </p>
+            <p>Increasing or Decreasing:<br>{{ trend }} </p>
+            {% for pattern in patterns %}
+            <p>Pattern Found:<br>{{ pattern }}</p>
+            {% endfor %}
+        </div>
     </div>
+    <style>
+    .ai-advice-box {
+        width: 49%;
+        background-color: #444;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        color: white;
+    }
+
+    .advice-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+        text-align: center;
+        align-items: start;
+    }
+
+    .advice-list p {
+        background-color: #333;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        font-size: 14px;
+        word-wrap: break-word;
+    }
+
+    .advice-positive {
+        background-color: #21ba45; /* Green */
+    }
+
+
+    .advice-negative {
+        background-color: #db2828; /* Red */
+    }
+
+    .advice-neutral {
+        background-color: #2185d0; /* Blue */
+    }
+</style>
+
 </div>
 
 
