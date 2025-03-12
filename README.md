@@ -1,23 +1,49 @@
-
 # FinancialPy
 
-FinancialPy este o aplicație web interactivă care simulează o platformă de trading, oferind utilizatorilor posibilitatea de a investi într-un mediu virtual, folosind un cont paper account. Aplicația permite căutarea și explorarea diverselor stock-uri, iar pentru fiecare stock selectat, utilizatorii pot accesa o pagină dedicată cu informații detaliate, inclusiv un grafic al evoluției prețului, un tabel cu prețurile actuale și sugestii oferite de botul integrat. Botul nostru, Budescu, adaugă o notă interactivă, oferind predicții și recomandări personalizate pentru fiecare stock. FinancialPy include și un portofoliu virtual, unde utilizatorii pot urmări performanța stock-urilor „achiziționate” și pot vedea marja de profit aferentă fiecărei investiții. De asemenea, aplicația permite gestionarea completă a tranzacțiilor, utilizatorii având opțiuni de cumpărare și vânzare a stock-urilor, iar balanța contului virtual se actualizează automat după fiecare operațiune. Proiectul este conceput pentru a oferi o experiență educativă și realistă, fiind un instrument ideal pentru cei care doresc să învețe și să exerseze investițiile pe piața de capital.
+FinancialPy is an interactive web application that simulates a trading platform, allowing users to invest in a virtual environment using a paper account. This application is designed to provide an educational and realistic experience, making it an ideal tool for those who want to learn and practice stock market investing.
 
+## Features
 
-Link github: https://github.com/rares567/IA4-homework.git
+- **Stock Search & Exploration**: Users can search for and explore various stocks.
+- **Dedicated Stock Pages**: Each stock has a dedicated page displaying:
+  - A price trend chart.
+  - A table with current prices.
+  - Personalized predictions and recommendations from the integrated bot.
+- **Virtual Portfolio**: Users can track the performance of purchased stocks and view profit margins.
+- **Transaction Management**:
+  - Buy and sell stocks using a virtual balance.
+  - The account balance updates automatically after each transaction.
 
-Limbaje/tehnologii folosite: Jinja, Flask, SQLite3, AlpacaAPI
+## Technologies Used
 
-Pentru a utiliza aplicația, începe prin actualizarea căii către mediul virtual și rulează scriptul run_all.py pentru a inițializa baza de date si a da run aplicatiei. Apoi o poti accesa la http://127.0.0.1:5000/. Introdu numele sau simbolul unui stock în bara de căutare și apasă Enter. După afișarea rezultatului, apasă butonul albastru View pentru a accesa pagina dedicată stock-ului, unde vei găsi un grafic al evoluției prețului, un tabel cu prețurile actuale și bot-ul Budescu, care oferă predicții despre stock. Tot aici poți achiziționa stock-uri selectând un număr care nu depășește balanța virtuală, iar apoi vei fi redirecționat către portofoliu, unde poți urmări evoluția acestora. Dacă dorești să vinzi, din pagina portofoliului poți reveni la pagina stock-ului, unde sub opțiunea Buy vei găsi opțiunea Sell. După vânzare, balanța se actualizează automat. Această aplicație este dedicată învățării și practicii pentru piața reală de capital.
+- **Backend**: Flask, SQLite3
+- **Frontend**: Jinja, HTML, CSS
+- **API Integration**: AlpacaAPI
 
-Contribuție individuală:
+## How to Use the Application
 
-Rizea Eduard a făcut bot-ul si a contribuit la baza de date.
+### Setup & Running the Application
+1. Update the path to the virtual environment.
+2. Run the `run_all.py` script to initialize the database and launch the application.
+3. Access the application at: `http://127.0.0.1:5000/`
 
-Manda Ștefan a implementat frontend-ul.
+### Usage Guide
+1. **Search for a Stock**: Enter the stock name or symbol in the search bar and press `Enter`.
+2. **View Stock Details**: Click the blue `View` button to access the stock’s dedicated page.
+3. **Analyze Data**:
+   - Examine the price trend chart and current price table.
+   - Get stock predictions and recommendations from the bot.
+4. **Buy Stocks**:
+   - Select a quantity (within your available virtual balance).
+   - Confirm the purchase to be redirected to your portfolio.
+5. **Sell Stocks**:
+   - Navigate to the portfolio page.
+   - Go back to the stock's dedicated page.
+   - Use the `Sell` option under the buy section.
+   - Your balance updates automatically after selling.
 
-Bănilă Rareș a făcut portofoliul de stock-uri si backend-ul. 
+## Contributors
 
-Probleme întampinate: API-ul a fost kinda outdated și a trebuit să ne mulăm pe el.
-Git-ul cu request-uri-le de pull și merge și conflictele au fost o problemă aparte.
-Restul problemelor pot fi considerate inconveniente minore.
+- **Bănilă Rareș** - Developed the stock portfolio and backend.
+- **Rizea Eduard** - Developed the bot and contributed to the database.
+- **Manda Ștefan** - Implemented the frontend.
